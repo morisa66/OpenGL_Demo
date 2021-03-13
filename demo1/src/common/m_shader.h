@@ -52,15 +52,18 @@ public:
         vertex = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vertex, 1, &v_code, NULL);
         glCompileShader(vertex);
+        check_and_get_error_info(vertex);
 
         fragment = glCreateShader(GL_FRAGMENT_SHADER);
         glShaderSource(fragment, 1, &f_code, NULL);
         glCompileShader(fragment);
+        check_and_get_error_info(fragment);
 
         _ID = glCreateProgram();
         glAttachShader(_ID, vertex);
         glAttachShader(_ID, fragment);
         glLinkProgram(_ID);
+        check_and_get_error_info(_ID, false);
 
         glDeleteShader(vertex);
         glDeleteShader(fragment);
@@ -83,6 +86,11 @@ public:
     void setInt(const std::string& name, int value) const
     {
         glUniform1i(glGetUniformLocation(_ID, name.c_str()), value);
+    }
+
+    void setVec3(const std::string& name, glm::vec3 value) const
+    {
+        glUniform3f(glGetUniformLocation(_ID, name.c_str()), value.x, value.y, value.z);
     }
 
     void setFloat(const std::string& name, float value) const
